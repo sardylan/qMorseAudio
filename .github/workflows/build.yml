@@ -18,6 +18,7 @@ jobs:
       with:
         version: ${{env.QT_VERSION}}
         target: "desktop"
+        modules: "qtmultimedia qtserialport qtsvg qtopengl"
     - name: Configure
       run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
     - name: Build
