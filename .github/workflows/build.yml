@@ -18,7 +18,7 @@ jobs:
       with:
         version: ${{env.QT_VERSION}}
         target: "desktop"
-        modules: "qtimageformats,qtmultimedia,qtserialport,qtsvg,qtopengl"
+        modules: "qtimageformats qtmultimedia qtserialport"
     - name: Configure
       run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
     - name: Build
