@@ -37,6 +37,9 @@ Config::Config(morseaudio::Config *config, QWidget *parent): QDialog(parent),
                                                              config(config) {
     ui->setupUi(this);
 
+    prepareBufferSizeValues(ui->txBufferSizeValue);
+    prepareBufferSizeValues(ui->monitorBufferSizeValue);
+
     connect(ui->txDeviceValue, &QComboBox::currentIndexChanged, this, &Config::updateTxDeviceParams);
     connect(ui->monitorDeviceValue, &QComboBox::currentIndexChanged, this, &Config::updateMonitorDeviceParams);
 
@@ -83,11 +86,13 @@ Config::Config(morseaudio::Config *config, QWidget *parent): QDialog(parent),
     });
 
     connect(ui->txDeviceValue, &QComboBox::currentIndexChanged, this, &Config::updateButtonEnabledState);
+    connect(ui->txBufferSizeValue, &QComboBox::currentIndexChanged, this, &Config::updateButtonEnabledState);
     connect(ui->txSamplerateValue, &QComboBox::currentIndexChanged, this, &Config::updateButtonEnabledState);
     connect(ui->txFormatValue, &QComboBox::currentIndexChanged, this, &Config::updateButtonEnabledState);
     connect(ui->txChannelsValue, &QComboBox::currentIndexChanged, this, &Config::updateButtonEnabledState);
 
     connect(ui->monitorDeviceValue, &QComboBox::currentIndexChanged, this, &Config::updateButtonEnabledState);
+    connect(ui->monitorBufferSizeValue, &QComboBox::currentIndexChanged, this, &Config::updateButtonEnabledState);
     connect(ui->monitorSamplerateValue, &QComboBox::currentIndexChanged, this, &Config::updateButtonEnabledState);
     connect(ui->monitorFormatValue, &QComboBox::currentIndexChanged, this, &Config::updateButtonEnabledState);
     connect(ui->monitorChannelsValue, &QComboBox::currentIndexChanged, this, &Config::updateButtonEnabledState);
@@ -106,12 +111,14 @@ int Config::exec() {
 
 bool Config::isConfigChanged() const {
     return config->getTxAudioConfig()->getDeviceId() != ui->txDeviceValue->currentData().toString()
+           || config->getTxAudioConfig()->getBufferSize() != ui->txBufferSizeValue->currentData().toInt()
            || config->getTxAudioConfig()->getSamplerate() != ui->txSamplerateValue->currentData().toInt()
            || config->getTxAudioConfig()->getSampleFormat() != ui->txFormatValue->currentData().value<
                QAudioFormat::SampleFormat>()
            || config->getTxAudioConfig()->getChannels() != ui->txChannelsValue->currentData().toInt()
 
            || config->getMonitorAudioConfig()->getDeviceId() != ui->monitorDeviceValue->currentData().toString()
+           || config->getMonitorAudioConfig()->getBufferSize() != ui->monitorBufferSizeValue->currentData().toInt()
            || config->getMonitorAudioConfig()->getSamplerate() != ui->monitorSamplerateValue->currentData().toInt()
            || config->getMonitorAudioConfig()->getSampleFormat() != ui->monitorFormatValue->currentData().value<
                QAudioFormat::SampleFormat>()
@@ -163,12 +170,14 @@ void Config::configLoad() {
     }
 
     selectOrAddItem(ui->txDeviceValue, config->getTxAudioConfig()->getDeviceId());
+    selectOrAddItem(ui->txBufferSizeValue, config->getTxAudioConfig()->getBufferSize());
     QMetaObject::invokeMethod(this, &Config::updateTxDeviceParams);
     selectOrAddItem(ui->txSamplerateValue, config->getTxAudioConfig()->getSamplerate());
     selectOrAddItem(ui->txFormatValue, config->getTxAudioConfig()->getSampleFormat());
     selectOrAddItem(ui->txChannelsValue, config->getTxAudioConfig()->getChannels());
 
     selectOrAddItem(ui->monitorDeviceValue, config->getMonitorAudioConfig()->getDeviceId());
+    selectOrAddItem(ui->monitorBufferSizeValue, config->getMonitorAudioConfig()->getBufferSize());
     QMetaObject::invokeMethod(this, &Config::updateMonitorDeviceParams);
     selectOrAddItem(ui->monitorSamplerateValue, config->getMonitorAudioConfig()->getSamplerate());
     selectOrAddItem(ui->monitorFormatValue, config->getMonitorAudioConfig()->getSampleFormat());
@@ -185,11 +194,13 @@ void Config::configLoad() {
 
 void Config::configSave() const {
     config->getTxAudioConfig()->setDeviceId(ui->txDeviceValue->currentData().toByteArray());
+    config->getTxAudioConfig()->setBufferSize(ui->txBufferSizeValue->currentData().toLongLong());
     config->getTxAudioConfig()->setSamplerate(ui->txSamplerateValue->currentData().toInt());
     config->getTxAudioConfig()->setSampleFormat(ui->txFormatValue->currentData().value<QAudioFormat::SampleFormat>());
     config->getTxAudioConfig()->setChannels(ui->txChannelsValue->currentData().toInt());
 
     config->getMonitorAudioConfig()->setDeviceId(ui->monitorDeviceValue->currentData().toByteArray());
+    config->getMonitorAudioConfig()->setBufferSize(ui->monitorBufferSizeValue->currentData().toLongLong());
     config->getMonitorAudioConfig()->setSamplerate(ui->monitorSamplerateValue->currentData().toInt());
     config->getMonitorAudioConfig()->setSampleFormat(
         ui->monitorFormatValue->currentData().value<QAudioFormat::SampleFormat>());
@@ -204,12 +215,14 @@ void Config::configDefault() {
     qInfo() << "Setting interface to default values";
 
     selectOrAddItem(ui->txDeviceValue, AUDIO_DEVICE_ID_DEFAULT);
+    selectOrAddItem(ui->txBufferSizeValue, AUDIO_BUFFER_SIZE_DEFAULT);
     QMetaObject::invokeMethod(this, &Config::updateTxDeviceParams);
     selectOrAddItem(ui->txSamplerateValue, AUDIO_SAMPLERATE_DEFAULT);
     selectOrAddItem(ui->txFormatValue, AUDIO_SAMPLE_FORMAT_DEFAULT);
     selectOrAddItem(ui->txChannelsValue, AUDIO_CHANNELS_DEFAULT);
 
     selectOrAddItem(ui->monitorDeviceValue, AUDIO_DEVICE_ID_DEFAULT);
+    selectOrAddItem(ui->monitorBufferSizeValue, AUDIO_BUFFER_SIZE_DEFAULT);
     QMetaObject::invokeMethod(this, &Config::updateMonitorDeviceParams);
     selectOrAddItem(ui->monitorSamplerateValue, AUDIO_SAMPLERATE_DEFAULT);
     selectOrAddItem(ui->monitorFormatValue, AUDIO_SAMPLE_FORMAT_DEFAULT);
@@ -338,4 +351,21 @@ int Config::findItem(const QComboBox *comboBox, const QVariant &itemData) {
 
     qDebug() << "Not found";
     return -1;
+}
+
+void Config::prepareBufferSizeValues(QComboBox *comboBox) {
+    comboBox->clear();
+    comboBox->addItem("128 bytes", 128);
+    comboBox->addItem("256 bytes", 256);
+    comboBox->addItem("512 bytes", 512);
+    comboBox->addItem("1 kB (1024 bytes)", 1024);
+    comboBox->addItem("2 kB (2048 bytes)", 2048);
+    comboBox->addItem("4 kB (4096 bytes)", 4096);
+    comboBox->addItem("8 kB (8192 bytes)", 8192);
+    comboBox->addItem("16 kB (16384 bytes)", 16384);
+    comboBox->addItem("32 kB (32768 bytes)", 32768);
+    comboBox->addItem("64 kB (65536 bytes)", 65536);
+    comboBox->addItem("128 kB (131072 bytes)", 131072);
+    comboBox->addItem("256 kB (262144 bytes)", 262144);
+    comboBox->addItem("512 kB (524288 bytes)", 524288);
 }

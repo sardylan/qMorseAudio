@@ -52,6 +52,7 @@ morseaudio::morseino::Config *Config::getMorseinoConfig() const {
 
 void Config::restoreDefault() const {
     txAudioConfig->setDeviceId(AUDIO_DEVICE_ID_DEFAULT);
+    txAudioConfig->setBufferSize(AUDIO_BUFFER_SIZE_DEFAULT);
     txAudioConfig->setSamplerate(AUDIO_SAMPLERATE_DEFAULT);
     txAudioConfig->setSampleFormat(AUDIO_SAMPLE_FORMAT_DEFAULT);
     txAudioConfig->setChannels(AUDIO_CHANNELS_DEFAULT);
@@ -59,6 +60,7 @@ void Config::restoreDefault() const {
     txAudioConfig->setVolume(AUDIO_VOLUME_DEFAULT);
 
     monitorAudioConfig->setDeviceId(AUDIO_DEVICE_ID_DEFAULT);
+    monitorAudioConfig->setBufferSize(AUDIO_BUFFER_SIZE_DEFAULT);
     monitorAudioConfig->setSamplerate(AUDIO_SAMPLERATE_DEFAULT);
     monitorAudioConfig->setSampleFormat(AUDIO_SAMPLE_FORMAT_DEFAULT);
     monitorAudioConfig->setChannels(AUDIO_CHANNELS_DEFAULT);
@@ -74,6 +76,8 @@ void Config::load() const {
     settings.beginGroup(MORSEAUDIO_CONFIG_GROUP_TX_PARAM);
     txAudioConfig->setDeviceId(
         settings.value(MORSEAUDIO_CONFIG_AUDIO_DEVICE_ID_PARAM, AUDIO_DEVICE_ID_DEFAULT).toByteArray());
+    txAudioConfig->setBufferSize(
+        settings.value(MORSEAUDIO_CONFIG_AUDIO_BUFFER_SIZE_PARAM, AUDIO_BUFFER_SIZE_DEFAULT).toLongLong());
     txAudioConfig->setSamplerate(
         settings.value(MORSEAUDIO_CONFIG_AUDIO_SAMPLERATE_PARAM, AUDIO_SAMPLERATE_DEFAULT).toInt());
     txAudioConfig->setSampleFormat(
@@ -88,6 +92,8 @@ void Config::load() const {
     settings.beginGroup(MORSEAUDIO_CONFIG_GROUP_MONITOR_PARAM);
     monitorAudioConfig->setDeviceId(
         settings.value(MORSEAUDIO_CONFIG_AUDIO_DEVICE_ID_PARAM,AUDIO_DEVICE_ID_DEFAULT).toByteArray());
+    monitorAudioConfig->setBufferSize(
+        settings.value(MORSEAUDIO_CONFIG_AUDIO_BUFFER_SIZE_PARAM, AUDIO_BUFFER_SIZE_DEFAULT).toLongLong());
     monitorAudioConfig->setSamplerate(
         settings.value(MORSEAUDIO_CONFIG_AUDIO_SAMPLERATE_PARAM, AUDIO_SAMPLERATE_DEFAULT).toInt());
     monitorAudioConfig->setSampleFormat(
@@ -111,6 +117,7 @@ void Config::save() const {
 
     settings.beginGroup(MORSEAUDIO_CONFIG_GROUP_TX_PARAM);
     settings.setValue(MORSEAUDIO_CONFIG_AUDIO_DEVICE_ID_PARAM, txAudioConfig->getDeviceId());
+    settings.setValue(MORSEAUDIO_CONFIG_AUDIO_BUFFER_SIZE_PARAM, txAudioConfig->getBufferSize());
     settings.setValue(MORSEAUDIO_CONFIG_AUDIO_SAMPLERATE_PARAM, txAudioConfig->getSamplerate());
     settings.setValue(MORSEAUDIO_CONFIG_AUDIO_SAMPLE_FORMAT_PARAM, txAudioConfig->getSampleFormat());
     settings.setValue(MORSEAUDIO_CONFIG_AUDIO_CHANNELS_PARAM, txAudioConfig->getChannels());
@@ -120,6 +127,7 @@ void Config::save() const {
 
     settings.beginGroup(MORSEAUDIO_CONFIG_GROUP_MONITOR_PARAM);
     settings.setValue(MORSEAUDIO_CONFIG_AUDIO_DEVICE_ID_PARAM, monitorAudioConfig->getDeviceId());
+    settings.setValue(MORSEAUDIO_CONFIG_AUDIO_BUFFER_SIZE_PARAM, monitorAudioConfig->getBufferSize());
     settings.setValue(MORSEAUDIO_CONFIG_AUDIO_SAMPLERATE_PARAM, monitorAudioConfig->getSamplerate());
     settings.setValue(MORSEAUDIO_CONFIG_AUDIO_SAMPLE_FORMAT_PARAM, monitorAudioConfig->getSampleFormat());
     settings.setValue(MORSEAUDIO_CONFIG_AUDIO_CHANNELS_PARAM, monitorAudioConfig->getChannels());

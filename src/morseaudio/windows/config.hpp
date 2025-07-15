@@ -66,6 +66,8 @@ namespace morseaudio::morseaudio::windows {
 
         static int findItem(const QComboBox *comboBox, const QVariant &itemData);
 
+        static void prepareBufferSizeValues(QComboBox *comboBox);
+
     private slots:
         void updateTxDeviceParams() const;
 

@@ -22,7 +22,7 @@
 using namespace morseaudio::audio;
 
 Config::Config(QObject *parent) : QObject(parent),
-                                  bufferSize(512),
+                                  bufferSize(AUDIO_BUFFER_SIZE_DEFAULT),
                                   samplerate(AUDIO_SAMPLERATE_DEFAULT),
                                   sampleFormat(AUDIO_SAMPLE_FORMAT_DEFAULT),
                                   channels(AUDIO_CHANNELS_DEFAULT),

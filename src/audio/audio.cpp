@@ -96,7 +96,7 @@ void Audio::start() {
 
     qDebug() << "Creating Audio sink";
     audioSink = new QAudioSink(audioDevice, audioFormat);
-    audioSink->setBufferSize(512); // TODO: config->getBufferSize()
+    audioSink->setBufferSize(config->getBufferSize());
     computeVolumeBasedOnKeyPressed();
     audioSink->start(oscillator);
 
