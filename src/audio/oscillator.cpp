@@ -39,6 +39,18 @@ int Oscillator::getFrequency() const {
     return frequency;
 }
 
+bool Oscillator::isSequential() const {
+    return true;
+}
+
+bool Oscillator::atEnd() const {
+    return false;
+}
+
+qint64 Oscillator::bytesAvailable() const {
+    return std::numeric_limits<qint64>::max();
+}
+
 void Oscillator::setFrequency(const int frequency) {
     if (frequency == this->frequency)
         return;

@@ -41,6 +41,12 @@ namespace morseaudio::audio {
 
         [[nodiscard]]int getFrequency() const;
 
+        [[nodiscard]] bool isSequential() const override;
+
+        [[nodiscard]] bool atEnd() const override;
+
+        [[nodiscard]] qint64 bytesAvailable() const override;
+
     public slots:
         void setFrequency(int frequency);
 
