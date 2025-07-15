@@ -39,7 +39,7 @@ namespace morseaudio::audio {
 
         ~Oscillator() override;
 
-        [[nodiscard]]int getFrequency() const;
+        [[nodiscard]] int getFrequency() const;
 
         [[nodiscard]] bool isSequential() const override;
 

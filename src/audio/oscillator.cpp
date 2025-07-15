@@ -66,7 +66,7 @@ void Oscillator::setFrequency(const int frequency) {
     recomputePulseIncrement();
 }
 
-qint64 Oscillator::readData(char *data, qint64 maxlen) {
+qint64 Oscillator::readData(char *data, const qint64 maxlen) {
     if (audioFormat.channelCount() == 0 || audioFormat.bytesPerSample() == 0)
         return 0;
 
