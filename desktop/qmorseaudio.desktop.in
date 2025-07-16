@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=@APPLICATION_NAME@
+Exec=qmorseaudio
+Icon=qmorseaudio
+Type=Application
+Categories=HamRadio

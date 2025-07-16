@@ -5,6 +5,7 @@ project(qMorseAudio
         LANGUAGES CXX)
 
 include(cmake/version.cmake)
+include(cmake/package.cmake)
 include(cmake/flags.cmake)
 include(cmake/deps.cmake)
 include(cmake/qt.cmake)
@@ -13,3 +14,5 @@ enable_testing()
 
 add_subdirectory(src)
 add_subdirectory(test)
+
+add_subdirectory(desktop)
