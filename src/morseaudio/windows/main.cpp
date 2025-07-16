@@ -20,6 +20,7 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QList>
 #include <QtCore/QDateTime>
+#include <QtCore/QCoreApplication>
 
 #include <QtMultimedia/QMediaDevices>
 #include <QtMultimedia/QAudioDevice>
@@ -46,6 +47,8 @@ Main::Main(QWidget *parent): QMainWindow(parent),
                              keyPressedPixmap(MORSEKEY_IMAGE_SIZE,MORSEKEY_IMAGE_SIZE),
                              keyReleasedPixmap(MORSEKEY_IMAGE_SIZE,MORSEKEY_IMAGE_SIZE) {
     ui->setupUi(this);
+
+    setWindowTitle(QString("%1 %2").arg(QCoreApplication::applicationName(), QCoreApplication::applicationVersion()));
 
     ui->morseStripWidget->addWidget(morseStrip);
 
